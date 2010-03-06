@@ -2,7 +2,7 @@
 
   module("Load JavaScript", {
     setup: function () {
-      $.pyte._basePath = 'src/';
+      $.pyte.setBasePath('src/');
     },
     teardown: function () {
       delete source_a;
@@ -74,7 +74,7 @@
 
   module("Include JavaScript sources with namespace", {
     setup: function (){
-      $.pyte._basePath = 'lib/';
+      $.pyte.setBasePath('lib/');
     },
     teardown: function () {
       delete this.classA;

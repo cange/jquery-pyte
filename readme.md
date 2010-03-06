@@ -15,11 +15,11 @@ Pyte brings several enhancements, such as namespace support and the loading of r
 ##How to use pyte##
 
 ###Define the base path###
-The \_basePath is the directory which contains the JavaScript files.<br />
+The base path is the directory which contains the JavaScript files.<br />
 As the _default_ is defined the _"/javascrpts/"_ path.<br />
 The path can be changed as follows.
 
-    $.pyte._basePath = 'my/own/path/js/';
+    $.pyte.setBasePath('my/own/path/js/');
 
 ###Load JavaScript sources###
 
@@ -46,7 +46,7 @@ Thus, the content is immediately available as an object.
 
     $.pyte.include('my.app.Abstract');
     // execude the Abstract class
-    new my.app.Abstract(); // Abstract is now running
+    new my.app.Abstract();
     
 #####Pyte proceeds from the following directory structure#####
   
@@ -70,18 +70,13 @@ To register an application class with your layout only include this single state
     $.pyte.namespace('foo.baz');
     $.pyte.namespace('foo.thut');
 
+##Dependencies##
 
-##Requirements##
-
-[jQuery](http://jquery.com/) version 1.4.*
-
-Pyte using the jQuery [jquery-inheritance](http://code.google.com/p/jquery-inheritance/)
-
+[jQuery](http://jquery.com/) version 1.4.*<br />
+Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/) plugin
 
 ##Licence##
-
 [MIT](http://www.opensource.org/licenses/mit-license.php)
-
 
 ##To do##
 Resolve dependence to jquery-inheritance

@@ -20,10 +20,19 @@
   
   $.pyte = {
     /**
-     * If a root directory to load the javascripts used by ajax
-     * @type {String}
+     * @private
+     * @type String
      */
     _basePath: "/javascripts/",
+    
+    /**
+     * @public 
+     * Define the root directory to load the JavaScripts.
+     * @param {String} path New path of directory.
+     */
+    setBasePath: function(path) {
+      this._basePath = typeof path == 'string' ? path : this._basePath;
+    },
 
     /**
      * @public
