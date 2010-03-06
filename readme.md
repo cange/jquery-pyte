@@ -36,7 +36,7 @@ Thus, the content is immediately available as an object.
 ####Simple example####
 #####Create a simple class in the Abstract.js file#####
 
-    my.app.Abtract = $.inherit({
+    my.app.Abstract = $.inherit({
       __contructor: function() {
         alert('Abstract is now running');
       }
