@@ -1,0 +1,1 @@
+var source_b = 'loaded';
