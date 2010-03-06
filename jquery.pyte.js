@@ -74,15 +74,17 @@
       if (!$.support.leadingWhitespace) { // msie
         window.execScript(code);
       } else if (!$.support.checkOn) { // webkit
-        $('head').first()
-          .append('<script type="text/javascript">' + code + '</script>');
+        $('head').append('<script type="text/javascript">' + code + '</script>');
       } else {
         window.eval(code);
       }
       $.pyte._loadedScripts.push(script);
     },
     
-    Namespace: {
+    /**
+     * @private
+     */
+    _Namespace: {
       /**
        * Provides a package namespace. 
        * 
@@ -100,7 +102,7 @@
        * Inspired by Xavier Shay
        * @link http://github.com/xaviershay/jquery-enumerable
        * Enumerable helper method
-       * @example $.inject([1,2,3], 0, function(a) { return a + thi;s; }) // => 6
+       * @example $.inject([1,2,3], 0, function(a) { return a + this; }) // => 6
        * @param {Array/Object} enumerable
        * @param {Array/Object} initialValue
        * @param {Function} callback
@@ -128,7 +130,7 @@
 
   /**
    * Contains all loaded script urls and prevents double ajax requests
-   * @type {Array} 
+   * @type Array
    */
   $.pyte._loadedScripts = [];
   $.grep($("script"), function(script) {
@@ -141,47 +143,49 @@
     pyte_preloaded :
     [];
 
-  $($.pyte.includedScripts).each($.pyte.Namespace);
+  $($.pyte.includedScripts).each($.pyte._Namespace);
 
 })(jQuery);
 
 
 
 /**
+ * @public
  * Shorthand way to call of $.pyte.Namespace.create(namespace); method
  */
 $.pyte.namespace = function (namespace){
-  $.pyte.Namespace.create(namespace);
+  $.pyte._Namespace.create(namespace);
 };
 
 /**
  * Page module constructed via it's class literal.
- *
+ * 
+ * @private
  * @constructor
- * @example new $.pyte.Module("foo.bar.Map", {container: "map1"});
+ * @example new $.pyte._Module("foo.bar.Map", {container: "map1"});
  * @param {String} klass Class literal.
  * @param {Object} [options]  Options to pass to constructor.
  * @param {Function} [callback]  Callback when module is initialized.
  */
-$.pyte.Module = $.inherit({
+$.pyte._Module = $.inherit({
   __constructor: function(klass, options, callback) {
     this.args = $(arguments).slice(1);
     this.klass = klass;
     this.options = this.args[0];
     this.callback = this.args[1];
     $.pyte.include(klass);
-    $.pyte.Module._modules.push(this);
+    $.pyte._Module._modules.push(this);
   }
 });
 
-$.pyte.Module._modules = [];
+$.pyte._Module._modules = [];
 
 /**
  * @private
  * Initialize all modules on DOM load.
  */
-$.pyte.Module._initialize = function() {
-  $.each($.pyte.Module._modules, function(index, module) {
+$.pyte._Module._initialize = function() {
+  $.each($.pyte._Module._modules, function(index, module) {
     window.eval("var Klass = " + module.klass);
     var instance = new Klass(module.options);
     if (module.callback) {
@@ -195,6 +199,7 @@ $.pyte.Module._initialize = function() {
  * Load and run an application class. The application will be global
  * accessible as "application".
  * 
+ * @public
  * @constructor
  * @example new Application("foo.bar.app.MyApp");
  * @param {String} klass Class reference as string pattern.
@@ -207,7 +212,7 @@ var Application = $.inherit({
       callback = options;      
       options = {};
     }
-    new $.pyte.Module(klass, options, function() {
+    new $.pyte._Module(klass, options, function() {
       window.application = this;
       if (callback) {
         callback.apply(this);
@@ -217,5 +222,5 @@ var Application = $.inherit({
 });
 
 $(function() {
-  $.pyte.Module._initialize();
+  $.pyte._Module._initialize();
 });

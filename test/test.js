@@ -65,7 +65,7 @@
   }); 
   
   test('Namespace inject', function(){
-    equals($.pyte.Namespace.inject([1,2,3], 0, function(a) { return a + this; }), 
+    equals($.pyte._Namespace.inject([1,2,3], 0, function(a) { return a + this; }), 
       6, 'Takes a callback with an accumulator and the current index.');
   });
 
