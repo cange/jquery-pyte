@@ -71,12 +71,13 @@ To register an application class with your layout only include this single state
     $.namespace('foo.thut');
 
 ##Dependencies##
-
 [jQuery](http://jquery.com/) version 1.4.*<br />
 Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/) plugin
 
 ##Licence##
-[MIT](http://www.opensource.org/licenses/mit-license.php)
+Dual licensed under the 
+[MIT](http://www.opensource.org/licenses/mit-license.php) and 
+[GPL](http://www.gnu.org/licenses/gpl.html) licenses.
 
 ##To do##
 Resolve dependence to jquery-inheritance
