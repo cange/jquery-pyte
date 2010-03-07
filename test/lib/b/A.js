@@ -1,4 +1,4 @@
-$.pyte.include('b.B');
+$.require('b.B');
 
 b.A = $.inherit({
     
