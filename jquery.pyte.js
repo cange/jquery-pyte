@@ -73,7 +73,7 @@
       if (!!$.grep(this._loadedScripts, function(loadedScripts) {
         return loadedScripts.match(script); }).length
       ) { 
-        return !1; // false 
+        return false;
       }
       
       var code = $.ajax({url: script, async: false}).responseText + 
