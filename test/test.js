@@ -53,7 +53,7 @@
   });
 
   test('Define "foo.bar.myNamespace" namespace', function() {
-    $.pyte.namespace('foo.bar.myNamespace');
+    $.namespace('foo.bar.myNamespace');
 
     ok(typeof foo == 'object', 'Object "foo" exists');
     ok(typeof foo.bar == 'object', 'Object "foo.bar" exists');
@@ -92,7 +92,8 @@
   test('simple class a.A', function (){
     ok(typeof a != 'object', 'Namespace A isn\'t exists');
   
-    $.pyte.include('a.A');
+    $.require('a.A');
+    $.require('a.A'); // double call, but it should be loaded only one time
     this.classA = new a.A();
     equals(typeof this.classA ,'object', 'Class a.A is type of');
     equals(this.classA.getName(),'A', 'Class a.A.getName() is')
@@ -101,7 +102,7 @@
   test('multiple class b.A', function (){
     ok(typeof b != 'object', 'Namespace "b" isn\'t exists');
     
-    $.pyte.include('b.A');
+    $.require('b.A');
     this.classA = new b.A();
     equals(typeof this.classA ,'object', 'Class b.A is type of');
     equals(this.classA.getName(), 'A', 'Class b.A.getName() is');

@@ -35,7 +35,8 @@
     },
 
     /**
-     * @public
+     * @private
+     * @deprecated
      * Append one or more classes to the document.
      * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings");
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
@@ -45,12 +46,13 @@
         if (!$.grep($.pyte.includedScripts, function(value) { 
           return value.match(classPath); }).length
         ) {
-          $.pyte.namespace(classPath);
+          $.namespace(classPath);
           $.pyte._load(classPath.replace(/\./g, "/") + '.js');
           $.pyte.includedScripts.push(classPath);
         }
       });
     },
+        
 
     /**
      * @public
@@ -154,17 +156,23 @@
 
   $($.pyte.includedScripts).each($.pyte._Namespace);
 
+  /**
+   * @public
+   * @alias $.pyte._Namespace.create()
+   * Shorthand way to call of $.pyte.Namespace.create(namespace); method
+   */  
+  $.namespace = function (namespace){
+    $.pyte._Namespace.create(namespace);
+  };
+  
+  /**
+   * @public
+   * @alias $.pyte.include
+   */
+  $.require = $.pyte.include;
+
 })(jQuery);
 
-
-
-/**
- * @public
- * Shorthand way to call of $.pyte.Namespace.create(namespace); method
- */
-$.pyte.namespace = function (namespace){
-  $.pyte._Namespace.create(namespace);
-};
 
 /**
  * Page module constructed via it's class literal.
@@ -182,7 +190,7 @@ $.pyte._Module = $.inherit({
     this.klass = klass;
     this.options = this.args[0];
     this.callback = this.args[1];
-    $.pyte.include(klass);
+    $.require(klass);
     $.pyte._Module._modules.push(this);
   }
 });

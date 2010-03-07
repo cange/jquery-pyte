@@ -30,7 +30,7 @@ The path can be changed as follows.
     $.pyte.load('first.js', 'second.js');
 
 ###Include JavaScript Classes###
-``$.pyte.include`` loads files and initialized the same path as the namespace. <br />
+``$.require`` loads files and initialized the same path as the namespace. <br />
 Thus, the content is immediately available as an object.
 
 ####Simple example####
@@ -44,7 +44,7 @@ Thus, the content is immediately available as an object.
 
 #####Load and call the class in another file#####
 
-    $.pyte.include('my.app.Abstract');
+    $.require('my.app.Abstract');
     // execude the Abstract class
     new my.app.Abstract();
     
@@ -64,11 +64,11 @@ To register an application class with your layout only include this single state
 
 ###Create JavaScript Namespace###
 
-    $.pyte.namespace('foo.bar'); // foo.bar is now available
+    $.namespace('foo.bar'); // foo.bar is now available
   
     // you can add many more of sub namespaces
-    $.pyte.namespace('foo.baz');
-    $.pyte.namespace('foo.thut');
+    $.namespace('foo.baz');
+    $.namespace('foo.thut');
 
 ##Dependencies##
 
