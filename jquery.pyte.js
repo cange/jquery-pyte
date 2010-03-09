@@ -43,12 +43,12 @@
      */
     include: function(classPaths) {
       $.each(arguments, function(i, classPath) {
-        if (!$.grep($.pyte.includedScripts, function(value) { 
+        if (!$.grep($.pyte.includedUrls, function(value) { 
           return value.match(classPath); }).length
         ) {
           $.namespace(classPath);
           $.pyte._load(classPath.replace(/\./g, "/") + '.js');
-          $.pyte.includedScripts.push(classPath);
+          $.pyte.includedUrls.push(classPath);
         }
       });
     },
@@ -68,28 +68,28 @@
      * Dynamically loads a script file.
      * @param {String} script Path to script e.g. "javascripts/foo/bar/GeoCoder.js"
      */  
-    _load: function (script) {
-      script = $.pyte._basePath + script;
+    _load: function (uri) {
+      uri = $.pyte._basePath + uri;
       
-      // find script in _loadedScripts and stopt load request
-      if (!!$.grep(this._loadedScripts, function(loadedScripts) {
-        return loadedScripts.match(script); }).length
+      // find uri in _loadedUrls and stopt load request
+      if (!!$.grep(this._loadedUrls, function(loadedUrl) {
+        return loadedUrl.match(uri); }).length
       ) { 
         return false;
       }
       
-      var code = $.ajax({url: script, async: false}).responseText + 
-        '\n//@ sourceURL=' + script; // guarantees the debug in Firebug
+      var script = $.ajax({url: uri, async: false}).responseText + 
+        '\n//@ sourceURL=' + uri; // guarantees the debug in Firebug
 
       // feature support is available on jquery version 1.4.*
       if (!$.support.leadingWhitespace) { // msie
-        window.execScript(code);
+        window.execScript(script);
       } else if (!$.support.checkOn) { // webkit
-        $('head').append('<script type="text/javascript">' + code + '</script>');
+        $('head').append('<script type="text/javascript">' + script + '</script>');
       } else {
-        window.eval(code);
+        window.eval(script);
       }
-      $.pyte._loadedScripts.push(script);
+      $.pyte._loadedUrls.push(uri);
     },
     
     /**
@@ -143,18 +143,18 @@
    * Contains all loaded script urls and prevents double ajax requests
    * @type Array
    */
-  $.pyte._loadedScripts = [];
+  $.pyte._loadedUrls = [];
   $.grep($("script"), function(script) {
     if(!!script.src.length && script.src.match(document.location.host)) {
-      $.pyte._loadedScripts.push(script.src); }
+      $.pyte._loadedUrls.push(script.src); }
     else { return; }
   });
 
-  $.pyte.includedScripts = (typeof pyte_preloaded != 'undefined') ?
+  $.pyte.includedUrls = (typeof pyte_preloaded != 'undefined') ?
     pyte_preloaded :
     [];
 
-  $($.pyte.includedScripts).each($.pyte._Namespace);
+  $($.pyte.includedUrls).each($.pyte._Namespace);
 
   /**
    * @public
