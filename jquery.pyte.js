@@ -44,7 +44,7 @@
     include: function(classPaths) {
       $.each(arguments, function(i, classPath) {
         if (!$.grep($.pyte.includedUrls, function(value) { 
-          return value.match(classPath); }).length
+          return value.match(classPath); }).length;
         ) {
           $.namespace(classPath);
           $.pyte._load(classPath.replace(/\./g, "/") + '.js');
@@ -73,22 +73,23 @@
       
       // find uri in _loadedUrls and stopt load request
       if (!!$.grep(this._loadedUrls, function(loadedUrl) {
-        return loadedUrl.match(uri); }).length
+        return loadedUrl.match(uri); }).length;
       ) { 
         return false;
       }
       
-      var script = $.ajax({url: uri, async: false}).responseText + 
-        '\n//@ sourceURL=' + uri; // guarantees the debug in Firebug
-
+      var script = $.ajax({url: uri, async: false}).responseText;
+        
       // feature support is available on jquery version 1.4.*
-      if (!$.support.leadingWhitespace) { // msie
-        window.execScript(script);
-      } else if (!$.support.checkOn) { // webkit
-        $('head').append('<script type="text/javascript">' + script + '</script>');
-      } else {
-        window.eval(script);
+      // dojo: investigate Joseph Smarr's technique for IE:
+      // http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
+      // @see http://trac.dojotoolkit.org/ticket/744
+      if ($.support.scriptEval) {
+        window.eval(script + '\r\n//@ sourceURL=' + uri); // debugging assist for Firebug
+      } else { // msie
+        $.globalEval(script);
       }
+      
       $.pyte._loadedUrls.push(uri);
     },
     
@@ -238,6 +239,7 @@ var Application = $.inherit({
   }
 });
 
+/** shorthanded way for ready() to initialize */
 $(function() {
   $.pyte._Module._initialize();
 });
