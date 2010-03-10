@@ -45,7 +45,7 @@ Thus, the content is immediately available as an object.
 #####Load and call the class in another file#####
 
     $.require('my.app.Abstract');
-    // execude the Abstract class
+    // execute the Abstract class
     new my.app.Abstract();
     
 #####Pyte proceeds from the following directory structure#####
@@ -78,6 +78,3 @@ Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/
 Dual licensed under the 
 [MIT](http://www.opensource.org/licenses/mit-license.php) and 
 [GPL](http://www.gnu.org/licenses/gpl.html) licenses.
-
-##To do##
-Resolve dependence to jquery-inheritance
