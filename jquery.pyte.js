@@ -1,5 +1,5 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library.
+ * Pyte is a JavaScript dependency management and deployment library. v 1.1.2
  *
  * @required jQuery v1.4.*
  * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
@@ -44,7 +44,7 @@
     include: function(classPaths) {
       $.each(arguments, function(i, classPath) {
         if (!$.grep($.pyte.includedUrls, function(value) { 
-          return value.match(classPath); }).length;
+          return value.match(classPath); }).length
         ) {
           $.namespace(classPath);
           $.pyte._load(classPath.replace(/\./g, "/") + '.js');
@@ -73,7 +73,7 @@
       
       // find uri in _loadedUrls and stopt load request
       if (!!$.grep(this._loadedUrls, function(loadedUrl) {
-        return loadedUrl.match(uri); }).length;
+        return loadedUrl.match(uri); }).length
       ) { 
         return false;
       }
