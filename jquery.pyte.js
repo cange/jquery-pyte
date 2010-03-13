@@ -16,7 +16,7 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  */ 
-(function($, window) {
+(function ($, window) {
   
   $.pyte = {
     /**
@@ -30,7 +30,7 @@
      * Define the root directory to load the JavaScripts.
      * @param {String} path New path of directory.
      */
-    setBasePath: function(path) {
+    setBasePath: function (path) {
       this._basePath = typeof path == 'string' ? path : this._basePath;
     },
 
@@ -41,9 +41,9 @@
      * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings", "my/other/scripts.js");
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
      */
-    include: function(classPaths) {
-      $.each(arguments, function(i, uri) {
-        if (!$.grep($.pyte.includedUrls, function(value) { 
+    include: function (classPaths) {
+      $.each(arguments, function (i, uri) {
+        if (!$.grep($.pyte.includedUrls, function (value) { 
           return value.match(uri); }).length
         ) {
           // construct prevents misinterpretations
@@ -58,7 +58,7 @@
           uri = $.pyte._basePath + uri;
 
           // find uri in _loadedUrls and stopt load request
-          if (!!$.grep($.pyte._loadedUrls, function(loadedUrl) {
+          if (!!$.grep($.pyte._loadedUrls, function (loadedUrl) {
             return loadedUrl.match(uri); }).length
           ) { 
             return false;
@@ -92,8 +92,8 @@
        * @return Returns the base package of namespace.
        * @type Object
        */
-      create: function(namespace) {
-        return this.inject(namespace.split("."), window, function(base){
+      create: function (namespace) {
+        return this.inject(namespace.split("."), window, function (base) {
           return (base = base[this] || (base[this] = {}));
         });
       },
@@ -102,7 +102,7 @@
        * Inspired by Xavier Shay
        * @link http://github.com/xaviershay/jquery-enumerable
        * Enumerable helper method
-       * @example $.inject([1,2,3], 0, function(a) { return a + this; }) // => 6
+       * @example $.inject([1,2,3], 0, function (a) { return a + this; }) // => 6
        * @param {Array/Object} enumerable
        * @param {Array/Object} initialValue
        * @param {Function} callback
@@ -125,7 +125,6 @@
         $.each(arguments, $.pyte.include);
       }
     }
-
   };
 
   /**
@@ -133,10 +132,10 @@
    * @type Array
    */
   $.pyte._loadedUrls = [];
-  $.grep($("script"), function(script) {
+  $.grep($("script"), function (script) {
     if(!!script.src.length && script.src.match(document.location.host)) {
-      $.pyte._loadedUrls.push(script.src); }
-    else { return; }
+      $.pyte._loadedUrls.push(script.src); 
+    } else { return; }
   });
 
   $.pyte.includedUrls = (typeof pyte_preloaded != 'undefined') ?
@@ -150,7 +149,7 @@
    * @alias $.pyte._Namespace.create()
    * Shorthand way to call of $.pyte.Namespace.create(namespace); method
    */  
-  $.namespace = function (namespace){
+  $.namespace = function (namespace) {
     $.pyte._Namespace.create(namespace);
   };
   
@@ -174,7 +173,7 @@
  * @param {Function} [callback]  Callback when module is initialized.
  */
 $.pyte._Module = $.inherit({
-  __constructor: function(klass, options, callback) {
+  __constructor: function (klass, options, callback) {
     this.args = $(arguments).slice(1);
     this.klass = klass;
     this.options = this.args[0];
@@ -190,8 +189,8 @@ $.pyte._Module._modules = [];
  * @private
  * Initialize all modules on DOM load.
  */
-$.pyte._Module._initialize = function() {
-  $.each($.pyte._Module._modules, function(index, module) {
+$.pyte._Module._initialize = function () {
+  $.each($.pyte._Module._modules, function (index, module) {
     window.eval("var Klass = " + module.klass);
     var instance = new Klass(module.options);
     if (module.callback) {
@@ -213,12 +212,12 @@ $.pyte._Module._initialize = function() {
  * @param {Function} [callback]  Callback method to run when app is initialized.
  */
 var Application = $.inherit({
-  __constructor: function(klass, options, callback) {
-    if($.isFunction(options)){
+  __constructor: function (klass, options, callback) {
+    if($.isfunction (options)) {
       callback = options;      
       options = {};
     }
-    new $.pyte._Module(klass, options, function() {
+    new $.pyte._Module(klass, options, function () {
       window.application = this;
       if (callback) {
         callback.apply(this);
@@ -228,6 +227,6 @@ var Application = $.inherit({
 });
 
 /** shorthanded way for ready() to initialize */
-$(function() {
+$(function () {
   $.pyte._Module._initialize();
 });
