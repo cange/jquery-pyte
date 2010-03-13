@@ -16,7 +16,7 @@
     
     ok(typeof source_a == 'undefined', '"source_a.js" not exists');
     
-    $.pyte.load('source_a.js');
+    $.require('source_a.js');
     ok(source_a == state, '"source_a.js" exists');
   });
   
@@ -28,7 +28,7 @@
     ok(typeof source_d == state, '"b/source_d.js" not exists');
     
     state = 'loaded'
-    $.pyte.load('b/source_b.js', 'b/source_c.js', 'b/source_d.js');
+    $.require('b/source_b.js', 'b/source_c.js', 'b/source_d.js');
     ok(source_b == state, '"b/source_b.js" is exists');
     ok(source_c == state, '"b/source_c.js" is exists');
     ok(source_d == state, '"b/source_d.js" is exists');
@@ -82,9 +82,11 @@
       try {  // IE (sucks) doesn't support delete
         delete a;
         delete b;
+        delete otherScripts;
       } catch(e){
         a = undefined;
         b = undefined;
+        otherScripts = undefined;
       };
     }
   });
@@ -102,7 +104,7 @@
   test('multiple class b.A', function (){
     ok(typeof b != 'object', 'Namespace "b" isn\'t exists');
     
-    $.require('b.A');
+    $.require('b.A', 'scripts.js');
     this.classA = new b.A();
     equals(typeof this.classA ,'object', 'Class b.A is type of');
     equals(this.classA.getName(), 'A', 'Class b.A.getName() is');
@@ -112,6 +114,8 @@
     equals(typeof this.classB ,'object', 'Class b.B is type of');
     equals(this.classB.getName(), 'B', 'Class b.B.getName() is');
     equals(this.classB.getPath(), 'b.B', 'Class b.B.getPath() is');
+    
+    equals(otherScripts, 'loaded', '"scripts.js" is');
   });
 
 })(jQuery);

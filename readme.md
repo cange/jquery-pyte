@@ -24,10 +24,10 @@ The path can be changed as follows.
 ###Load JavaScript sources###
 
     // load a single script source
-    $.pyte.load('single.js');
+    $.require('single.js');
 
     // load multiple script source
-    $.pyte.load('first.js', 'second.js');
+    $.require('first.js', 'second.js');
 
 ###Include JavaScript Classes###
 ``$.require`` loads files and initialized the same path as the namespace. <br />
@@ -42,11 +42,15 @@ Thus, the content is immediately available as an object.
       }
     });
 
-#####Load and call the class in another file#####
+#####Loading and call the class in another file#####
 
     $.require('my.app.Abstract');
     // execute the Abstract class
     new my.app.Abstract();
+    
+#####Loading of class files and other script files in one#####
+
+    $.require('my.app.Abstract', 'my/other/scripts.js');
     
 #####Pyte proceeds from the following directory structure#####
   

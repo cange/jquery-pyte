@@ -1,5 +1,5 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library. v 1.1.2
+ * Pyte is a JavaScript dependency management and deployment library. v1.2.2
  *
  * @required jQuery v1.4.*
  * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
@@ -16,7 +16,7 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  */ 
-(function($) {
+(function($, window) {
   
   $.pyte = {
     /**
@@ -36,63 +36,51 @@
 
     /**
      * @private
-     * @deprecated
+     * @deprecated use the alias $.require
      * Append one or more classes to the document.
-     * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings");
+     * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings", "my/other/scripts.js");
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
      */
     include: function(classPaths) {
-      $.each(arguments, function(i, classPath) {
+      $.each(arguments, function(i, uri) {
         if (!$.grep($.pyte.includedUrls, function(value) { 
-          return value.match(classPath); }).length
+          return value.match(uri); }).length
         ) {
-          $.namespace(classPath);
-          $.pyte._load(classPath.replace(/\./g, "/") + '.js');
-          $.pyte.includedUrls.push(classPath);
+          // construct prevents misinterpretations
+          var isUri = new RegExp('\/*.js$', 'gi');
+
+          if (!isUri.test(uri)) {
+            $.namespace(uri);
+            $.pyte.includedUrls.push(uri);
+            // transform a class path e.g. "foo.bar.MyClass" to "foo/bar/MyClass.js"
+            uri = uri.replace(/\./g, "/") + '.js';
+          }
+          uri = $.pyte._basePath + uri;
+
+          // find uri in _loadedUrls and stopt load request
+          if (!!$.grep($.pyte._loadedUrls, function(loadedUrl) {
+            return loadedUrl.match(uri); }).length
+          ) { 
+            return false;
+          }
+          
+          var script = $.ajax({url: uri, async: false}).responseText;
+            
+          // feature support is available on jquery version 1.4.*
+          // dojo: investigate Joseph Smarr's technique for IE:
+          // http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
+          // @see http://trac.dojotoolkit.org/ticket/744
+          if ($.support.scriptEval) {
+            window.eval(script + '\r\n//@ sourceURL=' + uri); // debugging assist for Firebug
+          } else { // msie
+            $.globalEval(script);
+          }
+          
+          $.pyte._loadedUrls.push(uri);
         }
       });
     },
-        
 
-    /**
-     * @public
-     */
-    load: function(sources){
-      $.each(arguments, function(i, source) {
-        $.pyte._load(source);
-      });
-    },
-
-    /**
-     * @private 
-     * Dynamically loads a script file.
-     * @param {String} script Path to script e.g. "javascripts/foo/bar/GeoCoder.js"
-     */  
-    _load: function (uri) {
-      uri = $.pyte._basePath + uri;
-      
-      // find uri in _loadedUrls and stopt load request
-      if (!!$.grep(this._loadedUrls, function(loadedUrl) {
-        return loadedUrl.match(uri); }).length
-      ) { 
-        return false;
-      }
-      
-      var script = $.ajax({url: uri, async: false}).responseText;
-        
-      // feature support is available on jquery version 1.4.*
-      // dojo: investigate Joseph Smarr's technique for IE:
-      // http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
-      // @see http://trac.dojotoolkit.org/ticket/744
-      if ($.support.scriptEval) {
-        window.eval(script + '\r\n//@ sourceURL=' + uri); // debugging assist for Firebug
-      } else { // msie
-        $.globalEval(script);
-      }
-      
-      $.pyte._loadedUrls.push(uri);
-    },
-    
     /**
      * @private
      */
@@ -172,7 +160,7 @@
    */
   $.require = $.pyte.include;
 
-})(jQuery);
+})(jQuery, window);
 
 
 /**
