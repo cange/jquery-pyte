@@ -115,14 +115,6 @@
             accumulator = callback.call(this, accumulator, index);
         });
         return accumulator;
-      },
-      
-      /**
-       * Incluses a list of classes.
-       * @param {Array} classes Classes to include.
-       */
-      include: function(classes) {
-        $.each(arguments, $.pyte.include);
       }
     }
   };
