@@ -42,13 +42,14 @@
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
      */
     include: function (classPaths) {
+      // construct prevents misinterpretations
+      var isUri = new RegExp('\/*.js$', 'gi'), 
+      script;
+      
       $.each(arguments, function (i, uri) {
         if (!$.grep($.pyte.includedUrls, function (value) { 
           return value.match(uri); }).length
         ) {
-          // construct prevents misinterpretations
-          var isUri = new RegExp('\/*.js$', 'gi');
-
           if (!isUri.test(uri)) {
             $.namespace(uri);
             $.pyte.includedUrls.push(uri);
@@ -56,7 +57,7 @@
             uri = uri.replace(/\./g, "/") + '.js';
           }
           uri = $.pyte._basePath + uri;
-
+          
           // find uri in _loadedUrls and stopt load request
           if (!!$.grep($.pyte._loadedUrls, function (loadedUrl) {
             return loadedUrl.match(uri); }).length
@@ -64,7 +65,7 @@
             return false;
           }
           
-          var script = $.ajax({url: uri, async: false}).responseText;
+          script = $.ajax({url: uri, async: false}).responseText;
             
           // feature support is available on jquery version 1.4.*
           // dojo: investigate Joseph Smarr's technique for IE:
@@ -112,7 +113,7 @@
       inject: function (enumerable, initialValue, callback) {
         var accumulator = initialValue;
         $.each(enumerable, function (index) {
-            accumulator = callback.call(this, accumulator, index);
+          accumulator = callback.call(this, accumulator, index);
         });
         return accumulator;
       }
