@@ -42,14 +42,14 @@
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
      */
     include: function (classPaths) {
-      // construct prevents misinterpretations
-      var isUri = new RegExp('\/*.js$', 'gi'), 
-      script;
-      
       $.each(arguments, function (i, uri) {
         if (!$.grep($.pyte.includedUrls, function (value) { 
           return value.match(uri); }).length
         ) {
+          // construct prevents misinterpretations
+          var isUri = new RegExp('\/*.js$', 'gi'), 
+          script;
+          
           if (!isUri.test(uri)) {
             $.namespace(uri);
             $.pyte.includedUrls.push(uri);
