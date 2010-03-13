@@ -1,5 +1,5 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library. v1.2.2
+ * Pyte is a JavaScript dependency management and deployment library. v1.1.3
  *
  * @required jQuery v1.4.*
  * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
