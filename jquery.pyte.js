@@ -206,7 +206,7 @@ $.pyte._Module._initialize = function () {
  */
 var Application = $.inherit({
   __constructor: function (klass, options, callback) {
-    if($.isfunction (options)) {
+    if($.isFunction(options)) {
       callback = options;      
       options = {};
     }
