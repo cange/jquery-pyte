@@ -1,5 +1,5 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library. v1.1.3
+ * Pyte is a JavaScript dependency management and deployment library. v1.1.4
  *
  * @required jQuery v1.4.*
  * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
@@ -94,28 +94,12 @@
        * @type Object
        */
       create: function (namespace) {
-        return this.inject(namespace.split("."), window, function (base) {
-          return (base = base[this] || (base[this] = {}));
+       // Enumerable inject helper method
+        var _window = window;
+        $.each(namespace.split("."), function (index) {
+            _window = (_window = _window[this] || (_window[this] = {}));
         });
-      },
-  
-      /** 
-       * Inspired by Xavier Shay
-       * @link http://github.com/xaviershay/jquery-enumerable
-       * Enumerable helper method
-       * @example $.inject([1,2,3], 0, function (a) { return a + this; }) // => 6
-       * @param {Array/Object} enumerable
-       * @param {Array/Object} initialValue
-       * @param {Function} callback
-       * @return 
-       * @type Array/Object
-       */
-      inject: function (enumerable, initialValue, callback) {
-        var accumulator = initialValue;
-        $.each(enumerable, function (index) {
-          accumulator = callback.call(this, accumulator, index);
-        });
-        return accumulator;
+        return _window;
       }
     }
   };
