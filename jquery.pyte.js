@@ -96,8 +96,8 @@
       create: function (namespace) {
        // Enumerable inject helper method
         var _window = window;
-        $.each(namespace.split("."), function (index) {
-            _window = (_window = _window[this] || (_window[this] = {}));
+        $.each(namespace.split("."), function () {
+          _window = (_window = _window[this] || (_window[this] = {}));
         });
         return _window;
       }
