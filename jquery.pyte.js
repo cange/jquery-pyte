@@ -1,5 +1,5 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library. v1.1.4
+ * Pyte is a JavaScript dependency management and deployment library. v1.1.4-dev
  *
  * @required jQuery v1.4.*
  * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
@@ -51,16 +51,17 @@
   
   $.extend({
     /**
-     * @private
-     * @deprecated use the alias $.require
+     * @public
      * Append one or more classes to the document.
-     * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings", "my/other/scripts.js");
-     * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
+     * @example $.require("foo.bar.Map", "foo.bar.Settings", "path/to/script.js");
+     * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder" or a 
+     *  path to a script file.
      */
     require: function (classPaths) {
       $.each(arguments, function (i, uri) {
-        if (!$.grep($.pyte.includedUrls, function (value) { 
-          return value.match(uri); }).length
+        if (!$.grep($.pyte.includedUrls, function (url) { 
+          return url.match(uri); 
+        }).length
         ) {
           // construct prevents misinterpretations
           var isUri = new RegExp('\/*.js$', 'gi'), 
@@ -99,8 +100,8 @@
     },
         
     /**
+     * @public
      * Provides a package namespace. 
-     * 
      * @param {String} namespace  Namespace e.g. "for.bar.events".
      * @return Returns the base package of namespace.
      * @type Object
@@ -129,10 +130,9 @@
    */
   $.pyte._Module = $.inherit({
     __constructor: function (klass, options, callback) {
-      this.args = $(arguments).slice(1);
       this.klass = klass;
-      this.options = this.args[0];
-      this.callback = this.args[1];
+      this.options = options;
+      this.callback = callback;
       $.require(klass);
       $.pyte._Module._modules.push(this);
     }
@@ -154,35 +154,35 @@
     });
   };
   
-  /**
-   * Load and run an application class. The application will be global
-   * accessible as "application".
-   * 
-   * @public
-   * @constructor
-   * @example new Application("foo.bar.app.MyApp");
-   * @param {String} klass Class reference as string pattern.
-   * @param {mixed} [options/callback] Some parameter for initial class.
-   * @param {Function} [callback]  Callback method to run when app is initialized.
-   */
-  var Application = $.inherit({
-    __constructor: function (klass, options, callback) {
-      if($.isFunction(options)) {
-        callback = options;      
-        options = {};
-      }
-      new $.pyte._Module(klass, options, function () {
-        window.application = this;
-        if (callback) {
-          callback.apply(this);
-        }
-      });
-    }
-  });
-  
 })(jQuery, window);
+
+/**
+ * Load and run an application class. The application will be global
+ * accessible as "application".
+ * 
+ * @public
+ * @constructor
+ * @example new Application("foo.bar.app.MyApp");
+ * @param {String} klass Class reference as string pattern.
+ * @param {mixed} [options/callback] Some parameter for initial class.
+ * @param {Function} [callback]  Callback method to run when app is initialized.
+ */
+var Application = $.inherit({
+  __constructor: function (klass, options, callback) {
+    if($.isFunction(options)) {
+      callback = options;      
+      options = {};
+    }
+    new $.pyte._Module(klass, options, function () {
+      window.application = this;
+      if (callback) {
+        callback.apply(this);
+      }
+    });
+  }
+});
 
 /** shorthanded way for ready() to initialize */
 $(function () {
   $.pyte._Module._initialize();
-});
+}); 
