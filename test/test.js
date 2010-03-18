@@ -63,11 +63,6 @@
     ok(window.bar == undefined, 'Object "bar" isn\'t added on window');
     ok(window.myNamespace == undefined, 'Object "myNamespace" isn\'t added on window');
   }); 
-  
-  test('Namespace inject', function(){
-    equals($.pyte._Namespace.inject([1,2,3], 0, function(a) { return a + this; }), 
-      6, 'Takes a callback with an accumulator and the current index.');
-  });
 
 
 
