@@ -33,7 +33,23 @@
     setBasePath: function (path) {
       this._basePath = typeof path == 'string' ? path : this._basePath;
     },
-
+    
+    /**
+     * Contains all loaded script urls and prevents double ajax requests
+     * @type Array
+     */
+    _loadedUrls: [],
+    
+    includedUrls: (typeof pyte_preloaded != 'undefined') ? pyte_preloaded : []
+  };
+  
+  $.grep($("script"), function (script) {
+    if(!!script.src.length && script.src.match(document.location.host)) {
+      $.pyte._loadedUrls.push(script.src); 
+    } else { return; }
+  });
+  
+  $.extend({
     /**
      * @private
      * @deprecated use the alias $.require
@@ -41,7 +57,7 @@
      * @example $.pyte.include("foo.bar.Map", "foo.bar.Settings", "my/other/scripts.js");
      * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder"
      */
-    include: function (classPaths) {
+    require: function (classPaths) {
       $.each(arguments, function (i, uri) {
         if (!$.grep($.pyte.includedUrls, function (value) { 
           return value.match(uri); }).length
@@ -81,127 +97,90 @@
         }
       });
     },
-
+        
     /**
-     * @private
+     * Provides a package namespace. 
+     * 
+     * @param {String} namespace  Namespace e.g. "for.bar.events".
+     * @return Returns the base package of namespace.
+     * @type Object
      */
-    _Namespace: {
-      /**
-       * Provides a package namespace. 
-       * 
-       * @param {String} namespace  Namespace e.g. "for.bar.events".
-       * @return Returns the base package of namespace.
-       * @type Object
-       */
-      create: function (namespace) {
-       // Enumerable inject helper method
-        var _window = window;
-        $.each(namespace.split("."), function () {
-          _window = (_window = _window[this] || (_window[this] = {}));
-        });
-        return _window;
-      }
+    namespace: function (namespace) {
+     // Enumerable inject helper method
+      var _window = window;
+      $.each(namespace.split("."), function (index) {
+        _window = (_window = _window[this] || (_window[this] = {}));
+      });
+      return _window;
     }
-  };
-
-  /**
-   * Contains all loaded script urls and prevents double ajax requests
-   * @type Array
-   */
-  $.pyte._loadedUrls = [];
-  $.grep($("script"), function (script) {
-    if(!!script.src.length && script.src.match(document.location.host)) {
-      $.pyte._loadedUrls.push(script.src); 
-    } else { return; }
   });
 
-  $.pyte.includedUrls = (typeof pyte_preloaded != 'undefined') ?
-    pyte_preloaded :
-    [];
-
-  $($.pyte.includedUrls).each($.pyte._Namespace);
-
+  $.each($.pyte.includedUrls, $.namespace);
+    
   /**
-   * @public
-   * @alias $.pyte._Namespace.create()
-   * Shorthand way to call of $.pyte.Namespace.create(namespace); method
-   */  
-  $.namespace = function (namespace) {
-    $.pyte._Namespace.create(namespace);
+   * Page module constructed via it's class literal.
+   * 
+   * @private
+   * @constructor
+   * @example new $.pyte._Module("foo.bar.Map", {container: "map1"});
+   * @param {String} klass Class literal.
+   * @param {Object} [options]  Options to pass to constructor.
+   * @param {Function} [callback]  Callback when module is initialized.
+   */
+  $.pyte._Module = $.inherit({
+    __constructor: function (klass, options, callback) {
+      this.args = $(arguments).slice(1);
+      this.klass = klass;
+      this.options = this.args[0];
+      this.callback = this.args[1];
+      $.require(klass);
+      $.pyte._Module._modules.push(this);
+    }
+  });
+  
+  $.pyte._Module._modules = [];
+  
+  /**
+   * @private
+   * Initialize all modules on DOM load.
+   */
+  $.pyte._Module._initialize = function () {
+    $.each($.pyte._Module._modules, function (index, module) {
+      window.eval("var Klass = " + module.klass);
+      var instance = new Klass(module.options);
+      if (module.callback) {
+        module.callback.apply(instance);
+      }
+    });
   };
   
   /**
+   * Load and run an application class. The application will be global
+   * accessible as "application".
+   * 
    * @public
-   * @alias $.pyte.include
+   * @constructor
+   * @example new Application("foo.bar.app.MyApp");
+   * @param {String} klass Class reference as string pattern.
+   * @param {mixed} [options/callback] Some parameter for initial class.
+   * @param {Function} [callback]  Callback method to run when app is initialized.
    */
-  $.require = $.pyte.include;
-
-})(jQuery, window);
-
-
-/**
- * Page module constructed via it's class literal.
- * 
- * @private
- * @constructor
- * @example new $.pyte._Module("foo.bar.Map", {container: "map1"});
- * @param {String} klass Class literal.
- * @param {Object} [options]  Options to pass to constructor.
- * @param {Function} [callback]  Callback when module is initialized.
- */
-$.pyte._Module = $.inherit({
-  __constructor: function (klass, options, callback) {
-    this.args = $(arguments).slice(1);
-    this.klass = klass;
-    this.options = this.args[0];
-    this.callback = this.args[1];
-    $.require(klass);
-    $.pyte._Module._modules.push(this);
-  }
-});
-
-$.pyte._Module._modules = [];
-
-/**
- * @private
- * Initialize all modules on DOM load.
- */
-$.pyte._Module._initialize = function () {
-  $.each($.pyte._Module._modules, function (index, module) {
-    window.eval("var Klass = " + module.klass);
-    var instance = new Klass(module.options);
-    if (module.callback) {
-      module.callback.apply(instance);
+  var Application = $.inherit({
+    __constructor: function (klass, options, callback) {
+      if($.isFunction(options)) {
+        callback = options;      
+        options = {};
+      }
+      new $.pyte._Module(klass, options, function () {
+        window.application = this;
+        if (callback) {
+          callback.apply(this);
+        }
+      });
     }
   });
-};
-
-
-/**
- * Load and run an application class. The application will be global
- * accessible as "application".
- * 
- * @public
- * @constructor
- * @example new Application("foo.bar.app.MyApp");
- * @param {String} klass Class reference as string pattern.
- * @param {mixed} [options/callback] Some parameter for initial class.
- * @param {Function} [callback]  Callback method to run when app is initialized.
- */
-var Application = $.inherit({
-  __constructor: function (klass, options, callback) {
-    if($.isFunction(options)) {
-      callback = options;      
-      options = {};
-    }
-    new $.pyte._Module(klass, options, function () {
-      window.application = this;
-      if (callback) {
-        callback.apply(this);
-      }
-    });
-  }
-});
+  
+})(jQuery, window);
 
 /** shorthanded way for ready() to initialize */
 $(function () {
