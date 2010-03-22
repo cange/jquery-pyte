@@ -5,7 +5,7 @@ JavaScript provide some OOP characteristics. <br />
 Pyte brings several enhancements, such as namespace support and the loading of remote script files.
 
 ###Features###
-* Tested against Firefox 3.x, Safari 3.x, IE 6-8 and Opera 9.5 
+* Tested against Firefox 2.x, Safari 3.x, IE 6-9 and Opera 9.5 
 * Provide namespace support
 * Synchronous remote file loading
 * On the fly dependencies
