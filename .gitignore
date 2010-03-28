@@ -1,3 +1,2 @@
 # Can ignore specific files
-dojo.js
-*pyte-*
+ignore/*
