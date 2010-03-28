@@ -48,7 +48,6 @@
 
   module("$.namespace()", {
     teardown: function () {
-      /*
       try { // IE (sucks) doesn't support delete
         delete foo;
         delete aa;
@@ -59,8 +58,14 @@
         aa = undefined;
         bb = undefined;
         cc = undefined;
-      };*/
+      };
     }
+  });
+
+  test('single params', function() {
+    ok(typeof foo != 'object', 'Object "foo" isn\'t defined');    
+    ok(typeof bar != 'object', 'Object "bar" isn\'t defined');    
+    ok(typeof myNamespace != 'object', 'myNamespace "that" isn\'t defined');    
   });
   
   test('multiple params ("aa.b.c", "bb.c.a", "cc.a.b")', function() {
@@ -69,7 +74,7 @@
     ok(typeof cc != 'object', 'Object "cc" isn\'t defined');
     
     $.namespace('aa.b.c', 'bb.c.a', 'cc.a.b');
-console.log('[Test]-aa %o bb %o', aa);
+
     ok(typeof aa == 'object', 'Object "aa" is now defined');
     ok(typeof aa.b == 'object', 'Object "aa.b" is now defined');
     ok(typeof aa.b.c == 'object', 'Object "aa.b.c" is now defined');
@@ -79,12 +84,6 @@ console.log('[Test]-aa %o bb %o', aa);
     ok(typeof cc == 'object', 'Object "cc" is now defined');
     ok(typeof cc.a == 'object', 'Object "cc.a" is now defined');
     ok(typeof cc.a.b == 'object', 'Object "cc.a.b" is now defined');
-  });
-  
-  test('Isn\'t "foo.bar.myNamespace" defined', function() {
-    ok(typeof foo != 'object', 'Object "foo" isn\'t defined');    
-    ok(typeof bar != 'object', 'Object "bar" isn\'t defined');    
-    ok(typeof myNamespace != 'object', 'myNamespace "that" isn\'t defined');    
   });
 
   test('Define "foo.bar.myNamespace" namespace', function() {
