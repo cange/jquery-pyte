@@ -35,6 +35,29 @@
     },
     
     /**
+     * @public
+     * Converts a nested array into a one-dimensional array.
+     * @param {Array} Array
+     * @return Returns a one-dimensional version of the array.
+     * @type Array     
+     */
+    flatten: function (args) {
+      var flatArgs = [];
+      $.each(args, function (index, arg) {
+        if ($.isArray(arg)) {
+          if (index > 0) {
+            flatArgs = $(args).slice(0, index);
+          }
+          args = $.merge(
+            $.merge(flatArgs, arg), 
+            $(args).slice(index + 1, args.length)
+          );
+        }
+      });
+      return args;
+    },
+    
+    /**
      * Contains all loaded script urls and prevents double ajax requests
      * @type Array
      */
@@ -45,7 +68,7 @@
   
   $.grep($("script"), function (script) {
     if(!!script.src.length && script.src.match(document.location.host)) {
-      $.pyte._loadedUrls.push(script.src); 
+      $.pyte._loadedUrls.push(script.src);
     } else { return; }
   });
   
@@ -58,7 +81,7 @@
      *  path to a script file.
      */
     require: function (classPaths) {
-      $.each(arguments, function (i, uri) {
+      $.each($.pyte.flatten(arguments), function (i, uri) {
         if (!$.grep($.pyte.includedUrls, function (url) { 
           return url.match(uri); 
         }).length
@@ -100,8 +123,8 @@
     },
         
     /**
-     * @public
      * Provides a package namespace. 
+     * 
      * @param {String} namespace  Namespace e.g. "for.bar.events".
      * @return Returns the base package of namespace.
      * @type Object
@@ -185,4 +208,4 @@ var Application = $.inherit({
 /** shorthanded way for ready() to initialize */
 $(function () {
   $.pyte._Module._initialize();
-}); 
+});

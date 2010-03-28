@@ -1,0 +1,1 @@
+var b_a = 'loaded';

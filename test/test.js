@@ -1,6 +1,6 @@
 (function($, undefined){
 
-  module("Load JavaScript", {
+  module("$.require()", {
     setup: function () {
       $.pyte.setBasePath('src/');
     },
@@ -14,30 +14,38 @@
   test("a single source", function() {
     var state = 'loaded';
     
-    ok(typeof source_a == 'undefined', '"source_a.js" not exists');
+    ok(typeof a_a == 'undefined', '"a/a.js" not exists');
     
-    $.require('source_a.js');
-    ok(source_a == state, '"source_a.js" exists');
+    $.require('a/a.js');
+    ok(source_a == state, '"a/a.js" exists');
   });
   
   test("multiple sources", function() {
     var state = 'undefined';
     
-    ok(typeof source_b == state, '"b/source_b.js" not exists');
-    ok(typeof source_c == state, '"b/source_c.js" not exists');
-    ok(typeof source_d == state, '"b/source_d.js" not exists');
+    ok(typeof b_a == state && typeof b_b == state && typeof b_c == state, '"b_*" objects not exists per initial');
     
     state = 'loaded'
-    $.require('b/source_b.js', 'b/source_c.js', 'b/source_d.js');
-    ok(source_b == state, '"b/source_b.js" is exists');
-    ok(source_c == state, '"b/source_c.js" is exists');
-    ok(source_d == state, '"b/source_d.js" is exists');
+    $.require('b/a.js', 'b/b.js', 'b/c.js');
+    ok(b_a == state, '"b/a.js" is exists');
+    ok(b_b == state, '"b/b.js" is exists');
+    ok(b_c == state, '"b/c.js" is exists');
   });
 
+  test("nested sources", function() {
+    var state = 'undefined';
+    
+    ok(typeof c_a == state && typeof c_b == state && typeof c_c == state && typeof c_d == state, '"c_*" object not exists');
+    
+    state = 'loaded'
+    $.require('c/a.js', ['c/b.js', 'c/c.js'], 'c/d.js');
+    ok(c_a == state, '"c/c_a.js" is exists');
+    ok(c_b == state, '"c/c_b.js" is exists');
+    ok(c_c == state, '"c/c_a.js" is exists');
+    ok(c_d == state, '"c/c_a.js" is exists');
+  });
 
-
-
-  module("Namespace", {
+  module("$.namespace(string)", {
     teardown: function () {
       try {  // IE (sucks) doesn't support delete
         delete foo;
