@@ -1,1 +1,0 @@
-var source_a = 'loaded';

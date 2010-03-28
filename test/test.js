@@ -42,7 +42,7 @@
     ok(c_a == state, '"c/c_a.js" is exists');
     ok(c_b == state, '"c/c_b.js" is exists');
     ok(c_c == state, '"c/c_a.js" is exists');
-    ok(c_d == state, '"c/c_a.js" is exists');
+    ok(c_d == state, '"c/c_d.js" is exists');
   });
 
   module("$.namespace(string)", {
