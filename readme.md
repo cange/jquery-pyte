@@ -34,25 +34,25 @@ The path can be changed as follows.
 Thus, the content is immediately available as an object.
 
 ####Simple example####
-#####Create a simple class in the Abstract.js file#####
+Create a simple class in the Abstract.js file
 
     my.app.Abstract = $.inherit({
-      __contructor: function() {
+      __constructor: function() {
         alert('Abstract is now running');
       }
     });
 
-#####Loading and call the class in another file#####
+Loading and call the class in another file
 
     $.require('my.app.Abstract');
     // execute the Abstract class
     new my.app.Abstract();
     
-#####Loading of class files and other script files in one#####
+Loading of class files and other script files in one
 
     $.require('my.app.Abstract', 'my/other/scripts.js');
     
-#####Pyte proceeds from the following directory structure#####
+Pyte proceeds from the following directory structure
   
     /javascripts/
       my/
@@ -60,7 +60,7 @@ Thus, the content is immediately available as an object.
           Abstract.js
 
 ####Run the application in the HTML document####
-To register an application class with your layout only include this single statement:
+To register an application class with your layout only include this single statement.
 
     <script type="text/javascript">
         new Application("my.app.Abstract");
@@ -70,15 +70,21 @@ To register an application class with your layout only include this single state
 
     $.namespace('foo.bar'); // foo.bar is now available
   
-    // you can add many more of sub namespaces
-    $.namespace('foo.baz');
+You can add many more of sub namespaces
+
+    $.namespace('foo.baz'); 
     $.namespace('foo.thut');
+_The Objects foo.baz and foo.thut are now available._
+
+
+Or you can register multiple namspaces.
+
+    $.namespace('my.first.space', 'my.second.space', 'and.many.more.spaces');
+_All these objects and sub objects are now registered on the window object._
 
 ##Dependencies##
-[jQuery](http://jquery.com/) version 1.4.*<br />
-Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/) plugin
+* [jQuery](http://jquery.com/) version 1.4.*
+* Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/) plugin
 
-##Licence##
-Dual licensed under the 
-[MIT](http://www.opensource.org/licenses/mit-license.php) and 
-[GPL](http://www.gnu.org/licenses/gpl.html) licenses.
+##License##
+Dual licensed under the [MIT](http://www.opensource.org/licenses/mit-license.php) and [GPL](http://www.gnu.org/licenses/gpl.html) licenses.
