@@ -125,20 +125,24 @@
     /**
      * Provides a package namespace. 
      * 
-     * @param {String} namespace  Namespace e.g. "for.bar.events".
+     * @param {String/Array} namespaces  Namespace e.g. "for.bar.events".
      * @return Returns the base package of namespace.
      * @type Object
      */
-    namespace: function (namespace) {
+    namespace: function (namespaces) {
      // Enumerable inject helper method
-      var _window = window;
-      $.each(namespace.split("."), function (index) {
-        _window = (_window = _window[this] || (_window[this] = {}));
+      $.each($.pyte.flatten(arguments), function (i, namespace) {
+        var _window = window;
+        $.each(namespace.split("."), function (i, part) {
+          _window = !!_window[part] ? _window[part] : _window[part] = {};
+        });
       });
-      return _window;
     }
   });
 
+  /**
+   * Register all initial include urls.
+   */
   $.each($.pyte.includedUrls, $.namespace);
     
   /**

@@ -45,15 +45,42 @@
     ok(c_d == state, '"c/c_d.js" is exists');
   });
 
-  module("$.namespace(string)", {
+
+  module("$.namespace()", {
     teardown: function () {
-      try {  // IE (sucks) doesn't support delete
+      /*
+      try { // IE (sucks) doesn't support delete
         delete foo;
+        delete aa;
+        delete bb;
+        delete cc;
       } catch(e){
         foo = undefined;
-      };
+        aa = undefined;
+        bb = undefined;
+        cc = undefined;
+      };*/
     }
   });
+  
+  test('multiple params ("aa.b.c", "bb.c.a", "cc.a.b")', function() {
+    ok(typeof aa != 'object', 'Object "aa" isn\'t defined');
+    ok(typeof bb != 'object', 'Object "bb" isn\'t defined');
+    ok(typeof cc != 'object', 'Object "cc" isn\'t defined');
+    
+    $.namespace('aa.b.c', 'bb.c.a', 'cc.a.b');
+console.log('[Test]-aa %o bb %o', aa);
+    ok(typeof aa == 'object', 'Object "aa" is now defined');
+    ok(typeof aa.b == 'object', 'Object "aa.b" is now defined');
+    ok(typeof aa.b.c == 'object', 'Object "aa.b.c" is now defined');
+    ok(typeof bb == 'object', 'Object "bb" is now defined');
+    ok(typeof bb.c == 'object', 'Object "bb.c" is now defined');
+    ok(typeof bb.c.a == 'object', 'Object "bb.c.a" is now defined');
+    ok(typeof cc == 'object', 'Object "cc" is now defined');
+    ok(typeof cc.a == 'object', 'Object "cc.a" is now defined');
+    ok(typeof cc.a.b == 'object', 'Object "cc.a.b" is now defined');
+  });
+  
   test('Isn\'t "foo.bar.myNamespace" defined', function() {
     ok(typeof foo != 'object', 'Object "foo" isn\'t defined');    
     ok(typeof bar != 'object', 'Object "bar" isn\'t defined');    
