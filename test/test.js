@@ -1,3 +1,7 @@
+$.pyte.setBasePath('lib/');
+new Application('c.A');
+
+
 (function($, undefined){
 
   module("$.require()", {
@@ -46,21 +50,7 @@
   });
 
 
-  module("$.namespace()", {
-    teardown: function () {
-      try { // IE (sucks) doesn't support delete
-        delete foo;
-        delete aa;
-        delete bb;
-        delete cc;
-      } catch(e){
-        foo = undefined;
-        aa = undefined;
-        bb = undefined;
-        cc = undefined;
-      };
-    }
-  });
+  module("$.namespace()");
 
   test('single params', function() {
     ok(typeof foo != 'object', 'Object "foo" isn\'t defined');    
@@ -93,12 +83,9 @@
     ok(typeof foo.bar == 'object', 'Object "foo.bar" exists');
     ok(typeof foo.bar.myNamespace == 'object', 'Object "foo.bar.myNamespace" exists');
     
-    ok(typeof window.foo == 'object', 'Object "foo" is added on window');
-    ok(window.bar == undefined, 'Object "bar" isn\'t added on window');
-    ok(window.myNamespace == undefined, 'Object "myNamespace" isn\'t added on window');
+    ok(typeof window.bar == 'undefined', 'Object "bar" isn\'t on window root exists');
+    ok(typeof window.myNamespace == 'undefined', 'Object "myNamespace" isn\'t on window root exists');
   }); 
-
-
 
 
   module("Include JavaScript sources with namespace", {
@@ -147,4 +134,17 @@
     equals(otherScripts, 'loaded', '"scripts.js" is');
   });
 
+  asyncTest("Application", function() {
+    setTimeout(function () {
+      equals(typeof c, 'object', '"c" is exists');
+      equals(typeof c.A, 'function', '"c.A" is exists');
+      equals(typeof application, 'object', 'Application class c.A is type of');
+      equals(application.getName(), 'A', 'Application class c.AA.getName() is');      
+      equals(application.getPath(), 'c.A', 'Application class c.AA.getPath() is');
+      start();
+    }, 1000);
+  });
+
 })(jQuery);
+
+
