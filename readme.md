@@ -7,7 +7,8 @@ Pyte brings several enhancements, such as namespace support and the loading of r
 ###Features###
 * Tested against Firefox 2.x, Safari 3.x, IE 6-9 and Opera 9.5 
 * Provide namespace support
-* Synchronous remote file loading
+* Synchronous remote JavaScript file loading
+* including of style sheets (css) files
 * On the fly dependencies
 * Application pattern
 * Light and easy class includes
@@ -21,6 +22,11 @@ The path can be changed as follows.
 
     $.pyte.setBasePath('my/own/path/js/');
 
+Define a base path to load stylesheet.
+ 
+    $.pyte.setBasePath('my/path/to/css/', $.pyte.STYESHEET);
+
+_Now you can also inlcude css files._
 ###Load JavaScript sources###
 
     // load a single script source
@@ -28,6 +34,15 @@ The path can be changed as follows.
 
     // load multiple script source
     $.require('first.js', 'second.js');
+
+###Load style sheets sources###
+Method is similar to JavaScript.
+
+    $.require('style.css');
+
+You can also mix the media. The order of the file type is irrelevant.
+
+    $.require('single.js', 'style.css');
 
 ###Include JavaScript Classes###
 ``$.require`` loads files and initialized the same path as the namespace. <br />
