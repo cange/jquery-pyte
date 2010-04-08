@@ -9,7 +9,7 @@ new Application('c.A');
 //    same($.pyte.flatten([1, [2]]), [1,2], 'Flat a nested (2x) array');
 //    same($.pyte.flatten([1, [2, [3], 4], 5]), [1, 2, 3, 4, 5], 'Flat a nested (3x) array');
   });
-
+  
   module("$.require()", {
     setup: function () {
       $.pyte.setBasePath('src/');
@@ -53,6 +53,29 @@ new Application('c.A');
     ok(c_b == state, '"c/c_b.js" is exists');
     ok(c_c == state, '"c/c_a.js" is exists');
     ok(c_d == state, '"c/c_d.js" is exists');
+  });
+
+  test("StyleSheets load (foo.css)", function() {
+    $.pyte.setBasePath('css/', $.pyte.STYLESHEET);
+    
+    ok($('head link[href$=foo.css]').length == 0, 'CSS file "foo.css" is not exist in the head of document.');
+    equals($('body').css("backgroundColor"), 'transparent', 'Body background color is "transparent" per default');
+    
+    $.require('foo.css');
+    stop();
+    setTimeout(function() {
+      start();
+      ok($('head link[href$=foo.css]').length == 1, 'CSS file "foo.css" is one time exist in the head of document.');
+      equals(/[fff|255]/.test($('body').css('backgroundColor')), true, 'Body background color is changed after css load');
+      alert("[Test]-$('body').css('backgroundColor') "+ $('body').css('backgroundColor'));
+    }, 1000);
+    
+    $.require('foo.css', 'foo.css', 'foo.css');
+    stop();
+    setTimeout(function() {
+      start();
+      ok($('head link[href$=foo.css]').length == 1, 'After try file to load twice time, the file may be available only once in head.');
+    }, 1000);
   });
 
 

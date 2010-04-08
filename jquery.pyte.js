@@ -20,20 +20,35 @@
   
   $.pyte = {
     /**
+     * @public
+     * @final
+     * @type String
+     */
+    STYLESHEET: 'css',
+    JAVASCRIPT: 'js',
+    
+    /**
      * @private
      * @type String
      */
     _basePath: "/javascripts/",
+    _styleBasePath: "/stylesheets/",
     
     /**
      * @public 
-     * Define the root directory to load the JavaScripts.
+     * Define the root directory to load the JavaScripts or StyleSheets.
      * @param {String} path New path of directory.
+     * @param {String}[optional] type Type of media ($.pyte.JAVASCRIPT or $.pyte.STYLESHEET).
      */
-    setBasePath: function (path) {
-      this._basePath = typeof path == 'string' ? path : this._basePath;
+    setBasePath: function (path, type) {
+      type = type || $.pyte.JAVASCRIPT;
+      if (type == $.pyte.JAVASCRIPT) {
+        this._basePath = typeof path == 'string' ? path : this._basePath;
+      } else {
+        this._styleBasePath = typeof path == 'string' ? path : this._styleBasePath;
+      }
     },
-    
+      
     /**
      * @public
      * Converts a nested array into a one-dimensional array.
@@ -63,11 +78,17 @@
     includedUrls: (typeof pyte_preloaded != 'undefined') ? pyte_preloaded : []
   };
   
-  $.grep($("script"), function (script) {
-    if(!!script.src.length && script.src.match(document.location.host)) {
-      $.pyte._loadedUrls.push(script.src);
+  /** 
+   * Find all initial loaded JavaScript and StyleSheet files and 
+   * stores them in $.pyte._loadedUrls.
+   */
+  $.grep($('head script, head link[type="text/css"]'), function (elem) {
+    var uriAttr = !!elem.src ? 'src' : 'href';
+    if(!!elem[uriAttr].length && !!elem[uriAttr].match(document.location.host)) {
+      $.pyte._loadedUrls.push(elem[uriAttr]);
     } else { return; }
   });
+
   
   $.extend({
     /**
@@ -84,16 +105,21 @@
         }).length
         ) {
           // construct prevents misinterpretations
-          var isUri = new RegExp('\/*.js$', 'gi'), 
+          var isUri = new RegExp('\/*.js$', 'gi').test(uri), 
+          isStyleSheet = new RegExp('\/*.css$', 'gi').test(uri), 
           script;
           
-          if (!isUri.test(uri)) {
-            $.namespace(uri);
-            $.pyte.includedUrls.push(uri);
-            // transform a class path e.g. "foo.bar.MyClass" to "foo/bar/MyClass.js"
-            uri = uri.replace(/\./g, "/") + '.js';
+          if (isStyleSheet) {
+            uri = $.pyte._styleBasePath + uri;
+          } else {
+            if (!isUri) {
+              $.namespace(uri);
+              $.pyte.includedUrls.push(uri);
+              // transform a class path e.g. "foo.bar.MyClass" to "foo/bar/MyClass.js"
+              uri = uri.replace(/\./g, "/") + '.js';
+            }
+            uri = $.pyte._basePath + uri;
           }
-          uri = $.pyte._basePath + uri;
           
           // find uri in _loadedUrls and stopt load request
           if (!!$.grep($.pyte._loadedUrls, function (loadedUrl) {
@@ -102,16 +128,21 @@
             return false;
           }
           
-          script = $.ajax({url: uri, async: false}).responseText;
+          if (isStyleSheet) {
+            $('head').first()
+              .append('<link rel="stylesheet" type="text/css" href="' + uri + '"/>');
+          } else {
+            script = $.ajax({url: uri, async: false}).responseText;
             
-          // feature support is available on jquery version 1.4.*
-          // dojo: investigate Joseph Smarr's technique for IE:
-          // http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
-          // @see http://trac.dojotoolkit.org/ticket/744
-          if ($.support.scriptEval) {
-            window.eval(script + '\r\n//@ sourceURL=' + uri); // debugging assist for Firebug
-          } else { // msie
-            $.globalEval(script);
+            // feature support is available on jquery version 1.4.*
+            // dojo: investigate Joseph Smarr's technique for IE:
+            // http://josephsmarr.com/2007/01/31/fixing-eval-to-use-global-scope-in-ie/
+            // @see http://trac.dojotoolkit.org/ticket/744
+            if ($.support.scriptEval) {
+              window.eval(script + '\r\n//@ sourceURL=' + uri); // debugging assist for Firebug
+            } else { // msie
+              $.globalEval(script);
+            }
           }
           
           $.pyte._loadedUrls.push(uri);
