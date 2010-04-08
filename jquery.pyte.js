@@ -45,11 +45,8 @@
       var flatArgs = [];
       $.each(args, function (index, arg) {
         if ($.isArray(arg)) {
-          if (index > 0) {
-            flatArgs = $(args).slice(0, index);
-          }
           args = $.merge(
-            $.merge(flatArgs, arg), 
+            $.merge(index > 0 ? $(args).slice(0, index) : flatArgs, arg), 
             $(args).slice(index + 1, args.length)
           );
         }

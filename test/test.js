@@ -4,6 +4,12 @@ new Application('c.A');
 
 (function($, undefined){
 
+  module("$.pyte.flatten()");
+  test("neste array flatten", function() {
+//    same($.pyte.flatten([1, [2]]), [1,2], 'Flat a nested (2x) array');
+//    same($.pyte.flatten([1, [2, [3], 4], 5]), [1, 2, 3, 4, 5], 'Flat a nested (3x) array');
+  });
+
   module("$.require()", {
     setup: function () {
       $.pyte.setBasePath('src/');
