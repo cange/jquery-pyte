@@ -7,8 +7,7 @@
  * Copyright (c) 2010 Christian Angermann
  * @link http://github.com/psyk/jquery-pyte
  *
- * This script is an adaptation of the extension for pyte prototypejs
- * by Martin Kleppe
+ * This script was inspired by the extension of pyte prototypejs Martin Kleppe.
  * @link http://github.com/aemkei/pyte
  *
  * Dual licensed under the MIT and GPL licenses.
