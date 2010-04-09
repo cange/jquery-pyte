@@ -57,17 +57,15 @@ new Application('c.A');
 
   test("StyleSheets load (foo.css)", function() {
     $.pyte.setBasePath('css/', $.pyte.STYLESHEET);
-    
     ok($('head link[href$=foo.css]').length == 0, 'CSS file "foo.css" is not exist in the head of document.');
-    equals($('body').css("backgroundColor"), 'transparent', 'Body background color is "transparent" per default');
+    equals($('body').css("marginBottom"), '8px', 'Body background color is "transparent" per default');
     
     $.require('foo.css');
     stop();
     setTimeout(function() {
       start();
       ok($('head link[href$=foo.css]').length == 1, 'CSS file "foo.css" is one time exist in the head of document.');
-      equals(/[fff|255]/.test($('body').css('backgroundColor')), true, 'Body background color is changed after css load');
-      alert("[Test]-$('body').css('backgroundColor') "+ $('body').css('backgroundColor'));
+      equals($('body').css("marginBottom"), '1px', 'Body background color is changed after css load');
     }, 1000);
     
     $.require('foo.css', 'foo.css', 'foo.css');
