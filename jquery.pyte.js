@@ -126,7 +126,7 @@
           if (isStyleSheet) {
             // Adds a CSS link tag with the style url.
             $('head').first()
-              .append('<link rel="stylesheet" type="text/css" href="' + uri + '"/>');
+              .append('<link rel="stylesheet" type="text/css" href="' + uri + '" />');
           } else {
             script = $.ajax({url: uri, async: false}).responseText;
             
