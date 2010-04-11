@@ -71,7 +71,7 @@ new Application('c.A');
     }, 500);
     
     
-    $.require('foo.css', 'foo.css', 'foo.css');
+    $.require('foo.css', 'foo.css');
     stop();
     setTimeout(function () {
       start();
