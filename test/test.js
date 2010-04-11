@@ -57,23 +57,26 @@ new Application('c.A');
 
   test("StyleSheets load (foo.css)", function() {
     $.pyte.setBasePath('css/', $.pyte.STYLESHEET);
-    ok($('head link[href$=foo.css]').length == 0, 'CSS file "foo.css" is not exist in the head of document.');
-    equals($('body').css("marginBottom"), '8px', 'Body background color is "transparent" per default');
+    var selector = 'head link[href*=foo]';
+    
+    ok($(selector).length == 0, 'CSS file "foo.css" is not exist in the head of document.');
+    equals($('body').css("position"), 'static', 'Body position is "static" per default');
     
     $.require('foo.css');
     stop();
-    setTimeout(function() {
+    setTimeout(function () {
       start();
-      ok($('head link[href$=foo.css]').length == 1, 'CSS file "foo.css" is one time exist in the head of document.');
-      equals($('body').css("marginBottom"), '1px', 'Body background color is changed after css load');
-    }, 1000);
+      equals($(selector).length, 1, 'CSS file "foo.css" is one time exist in the head of document.');
+      equals($('body').css("position"), 'relative', 'Body position is changed after css load');
+    }, 500);
+    
     
     $.require('foo.css', 'foo.css', 'foo.css');
     stop();
-    setTimeout(function() {
+    setTimeout(function () {
       start();
-      ok($('head link[href$=foo.css]').length == 1, 'After try file to load twice time, the file may be available only once in head.');
-    }, 1000);
+      equals($(selector).length, 1, 'After try file to load twice time, the file may be available only once in head.');
+    }, 500);
   });
 
 
@@ -161,15 +164,12 @@ new Application('c.A');
     equals(otherScripts, 'loaded', '"scripts.js" is');
   });
 
-  asyncTest("Application", function() {
-    setTimeout(function () {
-      equals(typeof c, 'object', '"c" is exists');
-      equals(typeof c.A, 'function', '"c.A" is exists');
-      equals(typeof application, 'object', 'Application class c.A is type of');
-      equals(application.getName(), 'A', 'Application class c.AA.getName() is');      
-      equals(application.getPath(), 'c.A', 'Application class c.AA.getPath() is');
-      start();
-    }, 1000);
+  test("Application", function() {
+    equals(typeof c, 'object', '"c" is exists');
+    equals(typeof c.A, 'function', '"c.A" is exists');
+    equals(typeof application, 'object', 'Application class c.A is type of');
+    equals(application.getName(), 'A', 'Application class c.AA.getName() is');      
+    equals(application.getPath(), 'c.A', 'Application class c.AA.getPath() is');
   });
 
 })(jQuery);

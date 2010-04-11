@@ -69,7 +69,7 @@
     },
     
     /**
-     * Contains all loaded script urls and prevents double ajax requests
+     * Contains all loaded script urls and prevents double ajax requests.
      * @type Array
      */
     _loadedUrls: [],
@@ -88,7 +88,6 @@
     } else { return; }
   });
 
-  
   $.extend({
     /**
      * @public
@@ -108,17 +107,14 @@
           isStyleSheet = new RegExp('\/*.css$', 'gi').test(uri), 
           script;
           
-          if (isStyleSheet) {
-            uri = $.pyte._styleBasePath + uri;
-          } else {
-            if (!isUri) {
-              $.namespace(uri);
-              $.pyte.includedUrls.push(uri);
-              // transform a class path e.g. "foo.bar.MyClass" to "foo/bar/MyClass.js"
-              uri = uri.replace(/\./g, "/") + '.js';
-            }
-            uri = $.pyte._basePath + uri;
+          if (!isUri && !isStyleSheet) {
+            $.namespace(uri);
+            $.pyte.includedUrls.push(uri);
+            // transform a class path e.g. "foo.bar.MyClass" to "foo/bar/MyClass.js"
+            uri = uri.replace(/\./g, "/") + '.js';
           }
+          
+          uri = (isStyleSheet ? $.pyte._styleBasePath : $.pyte._basePath) + uri;
           
           // find uri in _loadedUrls and stopt load request
           if (!!$.grep($.pyte._loadedUrls, function (loadedUrl) {
@@ -128,6 +124,7 @@
           }
           
           if (isStyleSheet) {
+            // Adds a CSS link tag with the style url.
             $('head').first()
               .append('<link rel="stylesheet" type="text/css" href="' + uri + '"/>');
           } else {
