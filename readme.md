@@ -1,32 +1,33 @@
 # Pyte - JavaScript#
 
 ##What is pyte##
-JavaScript provide some OOP characteristics. <br />
-Pyte brings several enhancements, such as namespace support and the loading of remote script files.
+JavaScript provide some OOP characteristics.
+Pyte brings several enhancements, such as namespace support, the loading of remote script files and embedding of style sheets files.
 
 ###Features###
 * Tested against IE 6.0+, FF 2+, Safari 3.0+, Opera 9.0+, Chrome
 * Provide namespace support
 * Synchronous remote JavaScript file loading
-* including of style sheets (css) files
+* On the fly embedding of style sheets (css) files
 * On the fly dependencies
 * Application pattern
 * Light and easy class includes
 
 ##How to use pyte##
 
-###Define the base path###
-The base path is the directory which contains the JavaScript files.<br />
-As the _default_ is defined the _"/javascrpts/"_ path.<br />
+###Define the base path for JavaScript and style sheets###
+The base path is the directory which contains the JavaScript files.
+As the _default_ is defined the _"/javascripts/"_ path.<br />
 The path can be changed as follows.
 
     $.pyte.setBasePath('my/own/path/js/');
 
-Define a base path to load stylesheet.
+####Define a base path to embed style sheets.####
+As the _default_ is defined the _"/stylesheets/"_ path.<br />
  
-    $.pyte.setBasePath('my/path/to/css/', $.pyte.STYESHEET);
+    $.pyte.setBasePath('my/path/to/css/', $.pyte.STYLESHEET);
 
-_Now you can also inlcude css files._
+_Now you can also embed css files._
 ###Load JavaScript sources###
 
     // load a single script source
@@ -35,7 +36,7 @@ _Now you can also inlcude css files._
     // load multiple script source
     $.require('first.js', 'second.js');
 
-###Load style sheets sources###
+###Embed style sheets sources###
 Method is similar to JavaScript.
 
     $.require('style.css');
