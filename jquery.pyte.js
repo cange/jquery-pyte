@@ -1,43 +1,80 @@
 /*!
- * Pyte is a JavaScript dependency management and deployment library. v1.1.8-dev
- *
- * @required jQuery v1.4.*
- * @required jquery.inherit - Inheritance plugin by Filatov Dmitry
- *
- * Copyright (c) 2010 Christian Angermann
- * @link http://github.com/psyk/jquery-pyte
- *
- * This script was inspired by the extension of pyte prototypejs Martin Kleppe.
- * @link http://github.com/aemkei/pyte
- *
- * Dual licensed under the MIT and GPL licenses.
- * http://www.opensource.org/licenses/mit-license.php
- * http://www.gnu.org/licenses/gpl.html
- *
- */ 
+ * @fileOverview
+ * Pyte brings several enhancements, such as namespace support, the loading of
+ * remote script files and embedding of style sheets files.
+ * @link Copyright (c) 2010 <a href="http://github.com/psyk/jquery-pyte">jquery-pyte</a>.
+ */
+
 (function ($, window) {
-  
+  /**
+   * The <code>pyte</code> object contains several service methods that are the 
+   * public methods <code>$.require</code> and <code>$.namespace</code> required.
+   * JavaScript provide some OOP characteristics. 
+   * Pyte brings several enhancements, such as namespace support, the loading of
+   * remote script files and embedding of style sheets files.
+   * 
+   * @author <a href="dev@psykmedia.de">Christian Angermann</a>
+   * @link Copyright (c) 2010 <a href="http://github.com/psyk/jquery-pyte">jquery-pyte</a>.
+   * 
+   * @link This script was inspired by the extension of 
+   * <a href="http://github.com/aemkei/pyte">pyte prototypejs</a> Martin Kleppe.
+   * 
+   * @link Dual licensed under the MIT and GPL licenses 
+   * <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a> 
+   * and <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.
+   * 
+   * @version 2010 1.1.8-dev
+   * @requires <a href="http.jquery.com">jQuery</a> v1.4.*
+   * @requires <a href="http://code.google.com/p/jquery-inheritance/">
+   * jquery.inherit</a> - Inheritance plugin by Filatov Dmitry
+   * @class 
+   */
   $.pyte = {
     /**
      * @public
-     * @final
+     * @constant
      * @type String
+     * @see #.setBasePath()
      */
     STYLESHEET: 'css',
+    
+    /**
+     * @public
+     * @constant
+     * @type String
+     * @see #.setBasePath()
+     */
     JAVASCRIPT: 'js',
     
     /**
-     * @private
+     * @default root directory to the JavaScript sources.
+     * private
      * @type String
      */
     _basePath: "/javascripts/",
-    _styleBasePath: "/stylesheets/",
     
     /**
-     * @public 
-     * Define the root directory to load the JavaScripts or StyleSheets.
+     * @default root directory to the Cascading Style Sheets sources.
+     * private
+     * @type String
+     */
+    _styleBasePath: "/stylesheets/",
+      
+    /**
+     * Defines the path to the JavaScripts or Cascading Style Sheets root directory.<br />
+     * The base path is the directory which contains the JavaScript files.
+     * The path can be changed as follows.
+     * @example 
+     * // Define a base path to include JavaScript.
+     * // As the <em>default</em> is defined the <em>"/javascripts/"</em> path.
+     * $.pyte.setBasePath('my/own/path/js/');
+     *
+     * // Define a base path to embed style sheets.
+     * // As the <em>default</em> is defined the <em>"/stylesheets/"</em> path.
+     * $.pyte.setBasePath('my/path/to/css/', $.pyte.STYLESHEET);
+     * @public
      * @param {String} path New path of directory.
-     * @param {String}[optional] type Type of media ($.pyte.JAVASCRIPT or $.pyte.STYLESHEET).
+     * @param {String} [type] Type of media $.pyte.JAVASCRIPT or $.pyte.STYLESHEET.
      */
     setBasePath: function (path, type) {
       type = type || $.pyte.JAVASCRIPT;
@@ -49,11 +86,11 @@
     },
       
     /**
-     * @public
      * Converts a nested array into a one-dimensional array.
-     * @param {Array} Array
-     * @return Returns a one-dimensional version of the array.
-     * @type Array     
+     * @public
+     * @example $.pyte.flatten([1, [2, 3], 4]); // returns [1, 2, 3, 4]
+     * @param {Array} args Nested array to be normalized
+     * @return {Array} Returns a one-dimensional version of the array.
      */
     flatten: function (args) {
       var flatArgs = [];
@@ -69,15 +106,23 @@
     },
     
     /**
-     * Contains all loaded script urls and prevents double ajax requests.
+     * Contains all loaded script urls and prevents double load of this urls.
+     * @private
      * @type Array
      */
     _loadedUrls: [],
-    
+
+    /**
+     * Contains all included script urls and prevents double ajax requests.
+     * @public
+     * @ignore
+     * @type Array
+     */    
     includedUrls: (typeof pyte_preloaded != 'undefined') ? pyte_preloaded : []
   };
   
   /** 
+   * @ignore
    * Find all initial loaded JavaScript and StyleSheet files and 
    * stores them in $.pyte._loadedUrls.
    */
@@ -88,15 +133,29 @@
     } else { return; }
   });
 
+  /** @lends $ */
   $.extend({
+
     /**
-     * @public
      * Append one or more classes to the document.
-     * @example $.require("foo.bar.Map", "foo.bar.Settings", "path/to/script.js");
-     * @param {String} classPaths Path to classes e.g. "foo.bar.GeoCoder" or a 
+     * @class
+     * @public
+     * @example // ###Load JavaScript sources###
+     * // load a single script source
+     * $.require('single.js');<br />
+     * // load multiple script source
+     * $.require('first.js', 'second.js');
+     * 
+     * @example // ###Embed style sheets sources###
+     * // Method is similar to JavaScript.
+     * $.require('style.css');<br />
+     * // You can also mix the media. The order of the file type is irrelevant.
+     * $.require("foo.bar.Map", "style.css", "path/to/script.js");
+     *
+     * @param {String} sourcePath Path to classes e.g. "foo.bar.GeoCoder" or a
      *  path to a script file.
      */
-    require: function (classPaths) {
+    require: function (sourcePath) {
       $.each($.pyte.flatten(arguments), function (i, uri) {
         if (!$.grep($.pyte.includedUrls, function (url) { 
           return url.match(uri); 
@@ -145,13 +204,13 @@
         }
       });
     },
-        
+    
     /**
-     * Provides a package namespace. 
-     * 
+     * Provides a package namespace.
+     * @class 
      * @param {String/Array} namespaces  Namespace e.g. "for.bar.events".
-     * @return Returns the base package of namespace.
-     * @type Object
+     * @return {Object} Returns the base package of namespace.
+     * @example $.namespace('for.bar.events'); // added the object path on the window object
      */
     namespace: function (namespaces) {
      // Enumerable inject helper method
@@ -163,7 +222,7 @@
       });
     }
   });
-
+  
   /**
    * Register all initial include urls.
    */
@@ -171,7 +230,6 @@
     
   /**
    * Page module constructed via it's class literal.
-   * 
    * @private
    * @constructor
    * @example new $.pyte._Module("foo.bar.Map", {container: "map1"});
@@ -189,6 +247,11 @@
     }
   });
   
+  /**
+   * @private
+   * Contains all registered modules.
+   * @type Array 
+   */
   $.pyte._Module._modules = [];
   
   /**
@@ -208,14 +271,16 @@
 })(jQuery, window);
 
 /**
- * Load and run an application class. The application will be global
- * accessible as "application".
- * 
+ * Enables load and initialize the same class. The class-instance object is 
+ * registered at the window.
  * @public
  * @constructor
- * @example new Application("foo.bar.app.MyApp");
+ * @example 
+ * &lt;script type="text/javascript"&gt
+ *   new Application("foo.bar.app.MyApp");
+ * &lt;/script&gt
  * @param {String} klass Class reference as string pattern.
- * @param {mixed} [options/callback] Some parameter for initial class.
+ * @param {Object|Function} [options|callback] Some parameter for initial class.
  * @param {Function} [callback]  Callback method to run when app is initialized.
  */
 var Application = $.inherit({
@@ -233,7 +298,7 @@ var Application = $.inherit({
   }
 });
 
-/** shorthanded way for ready() to initialize */
+/** @private */
 $(function () {
   $.pyte._Module._initialize();
 });
