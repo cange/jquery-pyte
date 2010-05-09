@@ -23,7 +23,7 @@
    * <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a> 
    * and <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.
    * 
-   * @version 2010 1.1.8-stable
+   * @version 2010 1.1.8
    * @requires <a href="http.jquery.com">jQuery</a> v1.4.*
    * @requires <a href="http://code.google.com/p/jquery-inheritance/">
    * jquery.inherit</a> - Inheritance plugin by Filatov Dmitry
