@@ -2,7 +2,7 @@
  * @fileOverview
  * Pyte brings several enhancements, such as namespace support, the loading of
  * remote script files and embedding of style sheets files.
- * @link Copyright (c) 2010 <a href="http://github.com/psyk/jquery-pyte">jquery-pyte</a>.
+ * @link Copyright (c) 2010 <a href="http://github.com/cange/jquery-pyte">jquery-pyte</a>.
  */
 
 (function ($, window) {
@@ -14,7 +14,7 @@
    * remote script files and embedding of style sheets files.
    * 
    * @author <a href="dev@psykmedia.de">Christian Angermann</a>
-   * @link Copyright (c) 2010 <a href="http://github.com/psyk/jquery-pyte">jquery-pyte</a>.
+   * @link Copyright (c) 2010 <a href="http://github.com/cange/jquery-pyte">jquery-pyte</a>.
    * 
    * @link This script was inspired by the extension of 
    * <a href="http://github.com/aemkei/pyte">pyte prototypejs</a> Martin Kleppe.
