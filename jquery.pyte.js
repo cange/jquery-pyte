@@ -1,12 +1,5 @@
-/*!
- * @fileOverview
- * Pyte brings several enhancements, such as namespace support, the loading of
- * remote script files and embedding of style sheets files.
- * @link Copyright (c) 2010 <a href="http://github.com/cange/jquery-pyte">jquery-pyte</a>.
- */
-
 (function ($, window) {
-  /**
+  /*!
    * The <code>pyte</code> object contains several service methods that are the 
    * public methods <code>$.require</code> and <code>$.namespace</code> required.
    * JavaScript provide some OOP characteristics. 
