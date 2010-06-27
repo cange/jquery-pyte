@@ -26,10 +26,11 @@
     
     /**
      * @public
-     * This flag is used for instance all the JavaScript data in a compressed 
-     *    file (production mode).
+     * The  flag is for compressed source probably in the <em>production</em> mode
+         of a application.
      * If this flag <em>true</em>, only the namespace is created, there are no 
      *    other data (files) loaded.
+     * This flag must be placed before all other.
      * Default (development mode) = <em>false</em>.
      * @type Object
      */

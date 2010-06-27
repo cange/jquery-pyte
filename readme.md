@@ -98,6 +98,13 @@ Or you can register multiple namspaces.
     $.namespace('my.first.space', 'my.second.space', 'and.many.more.spaces');
 _All these objects and sub objects are now registered on the window object._
 
+###Compress data mode###
+The <code>$.pyte.ignore</code> flag is for compress source probably in the _production_ mode of a application.
+If this flag _true_, only the namespace is created, there are no other data (files) loaded. __This flag must be placed before all other.__
+
+    $.pyte.ignore = true; // compress mode active
+    new Application("my.app.Abstract");
+    
 ##Dependencies##
 * [jQuery](http://jquery.com/) version 1.4.*
 * Pyte using the [jquery-inheritance](http://code.google.com/p/jquery-inheritance/) plugin
