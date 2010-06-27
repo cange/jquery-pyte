@@ -16,13 +16,25 @@
    * <a href="http://www.opensource.org/licenses/mit-license.php">MIT license</a> 
    * and <a href="http://www.gnu.org/licenses/gpl.html">GPL</a>.
    * 
-   * @version 2010 1.1.8
+   * @version 2010 1.1.9
    * @requires <a href="http.jquery.com">jQuery</a> v1.4.*
    * @requires <a href="http://code.google.com/p/jquery-inheritance/">
    * jquery.inherit</a> - Inheritance plugin by Filatov Dmitry
    * @class 
    */
   $.pyte = {
+    
+    /**
+     * @public
+     * This flag is used for instance all the JavaScript data in a compressed 
+     *    file (production mode).
+     * If this flag <em>true</em>, only the namespace is created, there are no 
+     *    other data (files) loaded.
+     * Default (development mode) = <em>false</em>.
+     * @type Object
+     */
+    ignore: false,
+    
     /**
      * @public
      * @constant
@@ -179,7 +191,7 @@
             // Adds a CSS link tag with the style url.
             $('head').first()
               .append('<link rel="stylesheet" type="text/css" href="' + uri + '" />');
-          } else {
+          } else if (!$.pyte.ignore) {
             script = $.ajax({url: uri, async: false}).responseText;
             
             // feature support is available on jquery version 1.4.*
