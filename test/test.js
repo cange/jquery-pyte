@@ -12,6 +12,7 @@ new Application('c.A');
   
   module("$.require()", {
     setup: function () {
+      $.pyte.ignore = false;
       $.pyte.setBasePath('src/');
     },
     teardown: function () {
@@ -19,8 +20,10 @@ new Application('c.A');
       delete source_b;
       delete source_c;
       delete source_d;
+//      delete compress;
     }
   });
+  
   test("a single source", function() {
     var state = 'loaded';
     
@@ -53,6 +56,23 @@ new Application('c.A');
     ok(c_b == state, '"c/c_b.js" is exists');
     ok(c_c == state, '"c/c_a.js" is exists');
     ok(c_d == state, '"c/c_d.js" is exists');
+  });
+  
+
+  test('Set "ignore" for compressed sources', function () {
+    // start production ignore mode 
+    $.pyte.ignore = true;
+    $.require('compress.Alpha');
+    new compress.Alpha;
+
+    ok('Alpha' in compress, 'Is "Alpha" in "compress"');
+    ok('Beta' in compress, 'Is "Beta" in "compress"');
+    ok('Gamma' in compress, 'Is "Gamma" in "compress"');
+    equals(compressedAlpha, true, 'Boolean "compressedAlpha"');
+    equals(compressedBeta, true, 'Boolean "compressedBeta"');
+    equals(compressedGamma, true, 'Boolean "compressedGamma"');
+    // switch back to development mode 
+    $.pyte.ignore = false;
   });
 
   test("StyleSheets load (foo.css)", function() {
@@ -164,7 +184,7 @@ new Application('c.A');
     equals(otherScripts, 'loaded', '"scripts.js" is');
   });
 
-  test("Application", function() {
+  test('Application', function() {
     equals(typeof c, 'object', '"c" is exists');
     equals(typeof c.A, 'function', '"c.A" is exists');
     equals(typeof application, 'object', 'Application class c.A is type of');
