@@ -1,3 +1,6 @@
+# Note #
+This plugin is now outdated as of jquery version 1.4.3. I recommend to use the [RequireJS](http://requirejs.org/) ([officially supported by jquery 1.4.3](http://blog.jquery.com/2010/10/16/jquery-143-released/)) solution.
+
 # Pyte - JavaScript#
 
 ##What is pyte##
